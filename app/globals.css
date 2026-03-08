@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+  background: #0a0a0a;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  height: 100%;
+  font-family: var(--font-barlow), sans-serif;
+  background: #0a0a0a;
+  overflow-x: hidden;
+}
+
+@layer utilities {
+  .bg-concrete {
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(20, 20, 20, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(15, 15, 15, 0.3) 0%, transparent 50%),
+      linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+    position: relative;
+  }
+
+  .bg-concrete::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
+    pointer-events: none;
+  }
+
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  .scanlines {
+    position: relative;
+  }
+
+  .scanlines::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 3px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .vignette {
+    position: relative;
+  }
+
+  .vignette::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .stencil {
+    font-family: var(--font-russo), sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 400;
+    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.1);
+  }
+
+  .industrial-button {
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    border: 2px solid #3a3a3a;
+    box-shadow: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.5),
+      0 4px 8px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+    position: relative;
+  }
+
+  .industrial-button::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .industrial-button:active {
+    box-shadow: 
+      inset 0 4px 8px rgba(0, 0, 0, 0.8),
+      0 2px 4px rgba(0, 0, 0, 0.5);
+    transform: translateY(1px);
+  }
+
+  .riveted {
+    position: relative;
+    border: 3px solid #1a1a1a;
+    box-shadow: 
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+      0 0 0 1px rgba(0, 0, 0, 0.5);
+  }
+
+  .riveted::before,
+  .riveted::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, #2a2a2a 30%, #1a1a1a 70%);
+    border-radius: 50%;
+    box-shadow: 
+      inset 0 1px 2px rgba(255, 255, 255, 0.1),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .riveted::before {
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .riveted::after {
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .dirty-red-glow {
+    box-shadow: 
+      0 0 20px rgba(220, 38, 38, 0.6),
+      0 0 40px rgba(220, 38, 38, 0.4),
+      0 0 60px rgba(220, 38, 38, 0.2),
+      inset 0 0 15px rgba(220, 38, 38, 0.3);
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    10% { opacity: 0.8; }
+    20% { opacity: 1; }
+    30% { opacity: 0.9; }
+    40% { opacity: 1; }
+    50% { opacity: 0.85; }
+    60% { opacity: 1; }
+  }
+
+  .flicker {
+    animation: flicker 0.3s ease-in-out;
+  }
+}
+
