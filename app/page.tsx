@@ -25,11 +25,27 @@ const formatTime = (ms: number): string => {
 };
 
 const ROASTS: Record<Rating, string[]> = {
-  "JUMP START": ["stewards are reviewing this", "that's a drive through penalty", "grosjean called, he wants his reputation back"],
-  "ELITE": ["disgusting. we hate you.", "verstappen is nervous rn", "actually unreal. who ARE you"],
+  "JUMP START": [
+    "just an inchident.",
+    "noted. we will review.",
+    "that's a drive through. no discussion.",
+    "this is not right, no no no no.",
+    "even the alpine tractor launches faster than this."
+  ],
+  "ELITE": [
+    "simply lovely.",
+    "hammer time.",
+    "not bad. not bad at all.",
+    "he did the job. respect."
+  ],
   "SOLID": ["not bad. not great. very p4.", "lando approves. still no wins tho", "respectable. barely."],
   "BACKMARKER": ["alonso has seen better.", "you're getting blue flagged rn", "at least you didn't DNF"],
-  "ARE YOU EVEN TRYING": ["bwoah.", "kimi retired for THIS", "please. close. the tab."],
+  "ARE YOU EVEN TRYING": [
+    "bwoah.",
+    "leave me alone i know what to do.",
+    "what are you doing what are you DOING.",
+    "multi 21, okay? multi 21."
+  ],
 };
 
 const TENOR_QUERIES: Record<Rating, string> = {
