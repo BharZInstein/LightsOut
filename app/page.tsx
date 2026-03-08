@@ -89,6 +89,8 @@ export default function Home() {
   const [roast, setRoast] = useState<string>("");
   const [showGoText, setShowGoText] = useState(false);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const isTouchDeviceRef = useRef(false);
 
   useEffect(() => {
     const pb = localStorage.getItem("f1-timer-pb");
@@ -245,6 +247,49 @@ export default function Home() {
       setLitLights(0);
     }
   }, [gameState, lightsOutTime, personalBest, startSequence]);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    isTouchDeviceRef.current = true;
+    const touch = e.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    };
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    
+    const touch = e.changedTouches[0];
+    const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
+    const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
+    const deltaTime = Date.now() - touchStartRef.current.time;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    
+    // Only trigger if it's a tap (small movement, short duration)
+    if (distance < 10 && deltaTime < 300) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleClick();
+      // Prevent click event from firing after touch
+      setTimeout(() => {
+        isTouchDeviceRef.current = false;
+      }, 300);
+    }
+    
+    touchStartRef.current = null;
+  }, [handleClick]);
+
+  const handleMouseClick = useCallback((e: React.MouseEvent) => {
+    // Prevent click from firing if it's a touch device (to avoid double-trigger)
+    if (isTouchDeviceRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    handleClick();
+  }, [handleClick]);
 
   const reset = () => {
     timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
@@ -446,8 +491,22 @@ export default function Home() {
 
         <div
           className="fixed inset-0 z-20 cursor-pointer"
-          onClick={handleClick}
-          onTouchStart={handleClick}
+          onClick={handleMouseClick}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchMove={(e) => {
+            // Track movement to distinguish scrolls from taps
+            if (touchStartRef.current) {
+              const touch = e.touches[0];
+              const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
+              const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
+              // If moved more than 10px, it's a scroll - mark it
+              if (deltaX > 10 || deltaY > 10) {
+                touchStartRef.current = null;
+              }
+            }
+          }}
+          style={{ touchAction: 'pan-y' }}
         />
       </div>
     );
