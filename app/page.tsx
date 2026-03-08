@@ -350,7 +350,7 @@ export default function Home() {
         </div>
 
         {personalBest !== null && (
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute top-4 left-4 z-10" style={{ pointerEvents: 'none' }}>
             <div className="text-gray-400 text-xs uppercase tracking-widest mb-1" style={{ fontFamily: 'var(--font-russo)' }}>
               PB
             </div>
@@ -360,7 +360,7 @@ export default function Home() {
           </div>
         )}
 
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4" style={{ pointerEvents: 'none' }}>
           <h1
             className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-center mb-2"
             style={{ fontFamily: 'var(--font-russo)' }}
@@ -430,13 +430,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div
-          className="fixed inset-0 z-0 cursor-pointer"
-          onClick={handleClick}
-          onTouchStart={handleClick}
-        />
-
-        <div className="absolute bottom-4 left-0 right-0 text-center z-10">
+        <div className="absolute bottom-4 left-0 right-0 text-center z-30">
           <p className="text-gray-500 text-sm">
             Made with ❤️ by{' '}
             <a
@@ -449,6 +443,12 @@ export default function Home() {
             </a>
           </p>
         </div>
+
+        <div
+          className="fixed inset-0 z-20 cursor-pointer"
+          onClick={handleClick}
+          onTouchStart={handleClick}
+        />
       </div>
     );
   }
@@ -541,8 +541,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="absolute bottom-4 left-0 right-0 text-center z-10">
+        <div className="absolute bottom-4 left-0 right-0 text-center z-30">
           <p className="text-gray-500 text-sm">
             Made with ❤️ by{' '}
             <a
