@@ -33,11 +33,11 @@ const ROASTS: Record<Rating, string[]> = {
 };
 
 const TENOR_QUERIES: Record<Rating, string> = {
-  "JUMP START": "f1 jump start penalty",
-  "ELITE": "max verstappen celebration f1",
-  "SOLID": "lando norris thumbs up f1",
+  "JUMP START": "f1 crash fail",
+  "ELITE": "max verstappen f1 win",
+  "SOLID": "lando norris f1 happy",
   "BACKMARKER": "fernando alonso f1 disappointed",
-  "ARE YOU EVEN TRYING": "kimi raikkonen leave me alone",
+  "ARE YOU EVEN TRYING": "kimi raikkonen bwoah",
 };
 
 const fetchGif = async (query: string): Promise<string | null> => {
@@ -95,18 +95,47 @@ export default function Home() {
 
   useEffect(() => {
     if (backgroundGifs.length === 0) {
-      const queries = ["kimi raikkonen f1", "lewis hamilton f1", "max verstappen f1", "lando norris f1"];
+      const queries = [
+        "kimi raikkonen f1",
+        "max verstappen f1",
+        "lando norris f1",
+        "charles leclerc ferrari f1",
+        "fernando alonso f1",
+        "lewis hamilton f1",
+        "sebastian vettel f1",
+        "carlos sainz f1",
+        "oscar piastri f1",
+        "george russell f1"
+      ];
+      
+      const POSITIONS = [
+        { top: '3%', left: '2%', rotation: -8 },
+        { top: '5%', left: '38%', rotation: 5 },
+        { top: '2%', left: '74%', rotation: -6 },
+        { top: '35%', left: '1%', rotation: 7 },
+        { top: '38%', left: '77%', rotation: -9 },
+        { top: '72%', left: '3%', rotation: 6 },
+        { top: '70%', left: '40%', rotation: -7 },
+        { top: '71%', left: '76%', rotation: 8 },
+        { top: '18%', left: '80%', rotation: -5 },
+        { top: '55%', left: '0%', rotation: 4 },
+      ];
+      
       Promise.all(queries.map(query => fetchGif(query)))
         .then((urls) => {
           const validUrls = urls.filter((url): url is string => url !== null);
           if (validUrls.length > 0) {
-            const positionedGifs = validUrls.map((url: string) => ({
-              url,
-              top: Math.random() * 75 + 5,
-              left: Math.random() * 75 + 5,
-              width: Math.random() * 140 + 180,
-              rotation: (Math.random() * 30 - 15),
-            }));
+            const positionedGifs = validUrls.map((url: string, index: number) => {
+              const pos = POSITIONS[index] || POSITIONS[0];
+              return {
+                url,
+                top: (window.innerHeight * parseFloat(pos.top) / 100),
+                left: (window.innerWidth * parseFloat(pos.left) / 100),
+                width: 190,
+                rotation: pos.rotation,
+              };
+            });
+            
             setBackgroundGifs(positionedGifs);
           } else {
             setBackgroundGifs([]);
@@ -236,11 +265,7 @@ export default function Home() {
   }, [gameState, handleClick, reset]);
 
   const shareToTwitter = () => {
-    if (!reactionTime || !rating) return;
-    const time = formatTime(reactionTime);
-    const text = `just reacted in ${time} on LIGHTS OUT. / ${rating} — ${roast} / beat me if you can 👉 lightsout.gg #F1`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-    window.open(url, "_blank");
+    // TODO: Add share functionality later
   };
 
   const getInstructionText = () => {
@@ -254,7 +279,17 @@ export default function Home() {
   if (gameState !== "finished") {
     return (
       <div className="min-h-screen bg-concrete noise-overlay vignette relative overflow-hidden">
-        <div className="absolute inset-0 z-0">
+        <div 
+          className="fixed pointer-events-none"
+          style={{
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            zIndex: 0,
+            overflow: 'hidden',
+          }}
+        >
           {backgroundGifs.length > 0 ? (
             backgroundGifs.map((gif, index) => {
               const isGameActive = gameState === "lighting" || gameState === "allLit";
@@ -263,20 +298,20 @@ export default function Home() {
                   key={`gif-${index}`}
                   src={gif.url}
                   alt="F1 meme"
-                  className="absolute object-cover pointer-events-none"
+                  className="absolute object-cover"
                   style={{
-                    top: `${gif.top}%`,
-                    left: `${gif.left}%`,
+                    top: `${gif.top}px`,
+                    left: `${gif.left}px`,
                     width: `${gif.width}px`,
                     height: `${gif.width}px`,
                     transform: `rotate(${gif.rotation}deg)`,
-                    zIndex: 0,
+                    opacity: 0.32,
                   }}
-                  initial={{ opacity: 0.4 }}
+                  initial={{ opacity: 0.32 }}
                   animate={{
                     opacity: isGameActive 
                       ? 0.05 
-                      : [0.4, 0.5, 0.4],
+                      : [0.32, 0.42, 0.32],
                   }}
                   transition={{
                     opacity: {
@@ -384,6 +419,20 @@ export default function Home() {
           onClick={handleClick}
           onTouchStart={handleClick}
         />
+
+        <div className="absolute bottom-4 left-0 right-0 text-center z-10">
+          <p className="text-gray-500 text-sm">
+            Made with ❤️ by{' '}
+            <a
+              href="https://x.com/bharzinstein76"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#E8002D] hover:text-[#c40026] transition-colors"
+            >
+              Bharz
+            </a>
+          </p>
+        </div>
       </div>
     );
   }
@@ -474,6 +523,21 @@ export default function Home() {
               TRY AGAIN
             </motion.button>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div className="absolute bottom-4 left-0 right-0 text-center z-10">
+          <p className="text-gray-500 text-sm">
+            Made with ❤️ by{' '}
+            <a
+              href="https://x.com/bharzinstein76"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#E8002D] hover:text-[#c40026] transition-colors"
+            >
+              Bharz
+            </a>
+          </p>
         </div>
       </motion.div>
     );
